@@ -9,6 +9,8 @@
             font-family: Arial, sans-serif;
             text-align: center;
             margin-top: 50px;
+            background-color: #ffffff;
+            color: #000000;
         }
 
         .avatar {
@@ -34,14 +36,13 @@
 
 <script>
 
-    // Function to get Telegram user data
     function getUserData() {
         return window.Telegram.WebApp.initDataUnsafe.user;
     }
 
     const userData = getUserData();
+
     const username = userData.first_name || 'User';
-    const userId = userData.id || 'Unknown';
     const avatarUrl = userData.photo_url || 'https://via.placeholder.com/100';
     const isPremium = userData.is_premium
 
@@ -63,7 +64,7 @@
 
     // Function to invite a friend
     function inviteFriend() {
-        const message = encodeURIComponent("Join me in this amazing miniapp: https://aharon-petrosov.github.io/miniapp_wonda");
+        const message = encodeURIComponent("Join me in this amazing miniapp: https://t.me/miniapp_wonda_bot");
         window.open(`https://t.me/share/url?url=${message}`, '_blank');
     }
 </script>
