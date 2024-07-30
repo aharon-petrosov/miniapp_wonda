@@ -10,16 +10,50 @@
             text-align: center;
             margin-top: 50px;
         }
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+        .premium-icon {
+            width: 20px;
+            vertical-align: middle;
+            margin-left: 5px;
+        }
     </style>
 </head>
 <body>
 <h1>Welcome to the Miniapp!</h1>
-<p>This is a simple miniapp hosted on GitHub Pages.</p>
-<button onclick="displayMessage()">Click me!</button>
-<p id="message"></p>
+<img class="avatar" src="https://via.placeholder.com/100" alt="Avatar">
+<h2 id="username">John Doe</h2>
+<div id="status">
+    <!-- Premium status will be displayed here -->
+</div>
+<button onclick="inviteFriend()">Invite a Friend</button>
+
 <script>
-    function displayMessage() {
-        document.getElementById('message').textContent = 'Hello, this is a simple message from the miniapp!';
+    // Sample user data
+    const user = {
+        name: 'John Doe',
+        isPremium: true, // Change to false to see non-premium state
+    };
+
+    // Display user's premium status
+    const statusElement = document.getElementById('status');
+    if (user.isPremium) {
+        statusElement.innerHTML = `
+        <span>Premium User</span>
+        <img class="premium-icon" src="https://t4.ftcdn.net/jpg/05/33/75/35/360_F_533753588_1krxEE0SDZWl0ZKd9cUzCL6HaTRo9UxK.jpg" alt="Premium Icon">
+      `;
+    } else {
+        statusElement.innerHTML = `<span>Standard User</span>`;
+    }
+
+    // Invite a friend function
+    function inviteFriend() {
+        // Open Telegram to invite a friend
+        const message = encodeURIComponent("Join me in this amazing miniapp: https://your-github-username.github.io/miniapp/");
+        window.open(`https://t.me/share/url?url=${message}`, '_blank');
     }
 </script>
 </body>

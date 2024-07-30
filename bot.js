@@ -5,27 +5,27 @@ const token = '7366510852:AAHWnWMZsHZLMwOVgJLuE_eMIl9uiVwvAEw';
 
 // Create a bot that uses polling to fetch new updates
 const bot = new TelegramBot(token, { polling: true });
-
-// Matches "/start" message
 bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
-    const message = `Hello, ${msg.from.first_name}! Welcome to the miniapp bot. Type /launch to start the miniapp.`;
+    const message = `Hello, ${msg.from.first_name}! Welcome to our miniapp. Click the button below to open the app.`;
 
-    // Send a welcome message
-    bot.sendMessage(chatId, message);
+    // Send message with inline keyboard button
+    bot.sendMessage(chatId, message, {
+        reply_markup: {
+            inline_keyboard: [
+                [
+                    {
+                        text: 'Open MiniApp',
+                        url: 'https://aharon-petrosov.github.io/miniapp_wonda/'
+                    }
+                ]
+            ]
+        }
+    });
 });
 
-// Matches "/launch" message
-bot.onText(/\/launch/, (msg) => {
-    const chatId = msg.chat.id;
-    const message = "Launching the miniapp! Visit: https://your-github-username.github.io/miniapp/";
-
-    // Send a message with the miniapp link
-    bot.sendMessage(chatId, message);
-});
-
-// Handle any other messages
+// Handle other messages
 bot.on('message', (msg) => {
     const chatId = msg.chat.id;
-    bot.sendMessage(chatId, 'I can only understand /start and /launch commands for now.');
+    bot.sendMessage(chatId, 'I only understand the /start command. Please use /start to see the options.');
 });
