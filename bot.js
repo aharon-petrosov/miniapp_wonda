@@ -8,9 +8,6 @@ const bot = new TelegramBot(token, { polling: true });
 bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
     const firstName = msg.from.first_name;
-    const userId = msg.from.id;
-    const is_premium = Boolean(msg.from.is_premium);
-
 
     const message = `Hello, ${firstName}! Welcome to our miniapp. Click the button below to open the app.`;
 
@@ -20,7 +17,9 @@ bot.onText(/\/start/, (msg) => {
                 [
                     {
                         text: 'Open MiniApp',
-                        url: `https://aharon-petrosov.github.io/miniapp_wonda/?userId=${userId}&firstName=${encodeURIComponent(firstName)}&is_premium=${is_premium}`
+                        web_app: {
+                            url: 'https://aharon-petrosov.github.io/miniapp_wonda' // The URL where your miniapp is hosted
+                        }
                     }
                 ]
             ]

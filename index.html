@@ -3,20 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Miniapp Wonda</title>
+    <title>Telegram Mini App</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             margin-top: 50px;
         }
-
         .avatar {
             width: 100px;
             height: 100px;
             border-radius: 50%;
         }
-
         .premium-icon {
             width: 20px;
             vertical-align: middle;
@@ -26,51 +24,59 @@
 </head>
 <body>
 <h1>Welcome to the Miniapp!</h1>
-<img class="avatar" src="https://via.placeholder.com/100" alt="Avatar">
-<h2 id="username"></h2>
+<img id="avatar" class="avatar" src="https://via.placeholder.com/100" alt="Avatar">
+<h2 id="username">User</h2>
 <div id="status"></div>
 <button onclick="inviteFriend()">Invite a Friend</button>
 
 <script>
-    // Function to get query parameters from the URL
-    function getQueryParams() {
-        const params = {};
-        const queryString = window.location.search.substring(1);
-        const pairs = queryString.split('&');
-        for (let i = 0; i < pairs.length; i++) {
-            const pair = pairs[i].split('=');
-            params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
-        }
-        return params;
+    // Initialize Telegram Web App API
+    window.Telegram.WebApp.onEvent('mainButtonClicked', function() {
+        window.Telegram.WebApp.expand();
+    });
+
+    // Function to get Telegram user data
+    function getUserData() {
+        return window.Telegram.WebApp.initDataUnsafe.user;
     }
 
-    // Retrieve user data from URL parameters
-    const params = getQueryParams();
-    const username = params.firstName || 'User';
-    const userId = params.userId || 'Unknown';
-    const isPremium = params.isPremium || false;
+    const userData = getUserData();
+    const username = userData.first_name || 'User';
+    const userId = userData.id || 'Unknown';
+    const avatarUrl = userData.photo_url || 'https://via.placeholder.com/100'; // Fallback to placeholder if no avatar
 
+    // Display user data
     document.getElementById('username').textContent = username;
+    document.getElementById('avatar').src = avatarUrl;
 
+    // Function to check premium status using an API
+    async function checkPremiumStatus(userId) {
+        try {
+            const response = await fetch(`https://api.example.com/users/${userId}/premium-status`);
+            const data = await response.json();
+            return data.isPremium; // Assuming the API response has an 'isPremium' field
+        } catch (err) {
+            console.error('Error checking premium status:', err);
+            return false;
+        }
+    }
 
-    const statusElement = document.getElementById('status');
-    if (isPremium) {
-        statusElement.innerHTML = `
+    checkPremiumStatus(userId).then(isPremium => {
+        const statusElement = document.getElementById('status');
+        if (isPremium) {
+            statusElement.innerHTML = `
           <span>Premium User</span>
           <img class="premium-icon" src="https://t4.ftcdn.net/jpg/05/33/75/35/360_F_533753588_1krxEE0SDZWl0ZKd9cUzCL6HaTRo9UxK.jpg" alt="Premium Icon">
         `;
-    } else {
-        statusElement.innerHTML = `<span>Standard User</span>`;
-    }
+        } else {
+            statusElement.innerHTML = `<span>Standard User</span>`;
+        }
+    });
 
+    // Function to invite a friend
     function inviteFriend() {
-        const botUsername = 'miniapp_wonda_bot';
-
-        // Create a link to start a chat with the bot including a referral parameter
-        const inviteLink = `https://t.me/${botUsername}`;
-
-        // Open the Telegram app with the invite link
-        window.open(inviteLink, '_blank');
+        const message = encodeURIComponent("Join me in this amazing miniapp: https://your-web-app-url.com/");
+        window.open(`https://t.me/share/url?url=${message}`, '_blank');
     }
 </script>
 </body>
