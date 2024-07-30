@@ -7,25 +7,23 @@ const token = '7366510852:AAHWnWMZsHZLMwOVgJLuE_eMIl9uiVwvAEw';
 const bot = new TelegramBot(token, { polling: true });
 bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
-    const message = `Hello, ${msg.from.first_name}! Welcome to our miniapp. Click the button below to open the app.`;
+    const firstName = msg.from.first_name;
+    const userId = msg.from.id;
+    const is_premium = Boolean(msg.from.is_premium);
 
-    // Send message with inline keyboard button
+
+    const message = `Hello, ${firstName}! Welcome to our miniapp. Click the button below to open the app.`;
+
     bot.sendMessage(chatId, message, {
         reply_markup: {
             inline_keyboard: [
                 [
                     {
                         text: 'Open MiniApp',
-                        url: 'https://aharon-petrosov.github.io/miniapp_wonda/'
+                        url: `https://aharon-petrosov.github.io/miniapp_wonda/?userId=${userId}&firstName=${encodeURIComponent(firstName)}&is_premium=${is_premium}`
                     }
                 ]
             ]
         }
     });
-});
-
-// Handle other messages
-bot.on('message', (msg) => {
-    const chatId = msg.chat.id;
-    bot.sendMessage(chatId, 'I only understand the /start command. Please use /start to see the options.');
 });
