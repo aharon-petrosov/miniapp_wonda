@@ -10,17 +10,20 @@
             text-align: center;
             margin-top: 50px;
         }
+
         .avatar {
             width: 100px;
             height: 100px;
             border-radius: 50%;
         }
+
         .premium-icon {
             width: 20px;
             vertical-align: middle;
             margin-left: 5px;
         }
     </style>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
 <h1>Welcome to the Miniapp!</h1>
@@ -30,10 +33,6 @@
 <button onclick="inviteFriend()">Invite a Friend</button>
 
 <script>
-    // Initialize Telegram Web App API
-    window.Telegram.WebApp.onEvent('mainButtonClicked', function() {
-        window.Telegram.WebApp.expand();
-    });
 
     // Function to get Telegram user data
     function getUserData() {
@@ -43,35 +42,24 @@
     const userData = getUserData();
     const username = userData.first_name || 'User';
     const userId = userData.id || 'Unknown';
-    const avatarUrl = userData.photo_url || 'https://via.placeholder.com/100'; // Fallback to placeholder if no avatar
+    const avatarUrl = userData.photo_url || 'https://via.placeholder.com/100';
+    const isPremium = userData.is_premium
 
     // Display user data
     document.getElementById('username').textContent = username;
     document.getElementById('avatar').src = avatarUrl;
 
-    // Function to check premium status using an API
-    async function checkPremiumStatus(userId) {
-        try {
-            const response = await fetch(`https://api.example.com/users/${userId}/premium-status`);
-            const data = await response.json();
-            return data.isPremium; // Assuming the API response has an 'isPremium' field
-        } catch (err) {
-            console.error('Error checking premium status:', err);
-            return false;
-        }
-    }
 
-    checkPremiumStatus(userId).then(isPremium => {
-        const statusElement = document.getElementById('status');
-        if (isPremium) {
-            statusElement.innerHTML = `
+    const statusElement = document.getElementById('status');
+    if (isPremium) {
+        statusElement.innerHTML = `
           <span>Premium User</span>
           <img class="premium-icon" src="https://t4.ftcdn.net/jpg/05/33/75/35/360_F_533753588_1krxEE0SDZWl0ZKd9cUzCL6HaTRo9UxK.jpg" alt="Premium Icon">
         `;
-        } else {
-            statusElement.innerHTML = `<span>Standard User</span>`;
-        }
-    });
+    } else {
+        statusElement.innerHTML = `<span>Standard User</span>`;
+    }
+
 
     // Function to invite a friend
     function inviteFriend() {
