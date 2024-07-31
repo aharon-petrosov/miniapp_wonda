@@ -1,9 +1,7 @@
 const TelegramBot = require('node-telegram-bot-api');
 
-// Replace with your own token from BotFather
 const token = '7366510852:AAHWnWMZsHZLMwOVgJLuE_eMIl9uiVwvAEw';
 
-// Create a bot that uses polling to fetch new updates
 const bot = new TelegramBot(token, { polling: true });
 bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
@@ -13,16 +11,23 @@ bot.onText(/\/start/, (msg) => {
 
     bot.sendMessage(chatId, message, {
         reply_markup: {
-            inline_keyboard: [
+            keyboard: [
                 [
                     {
                         text: 'Open MiniApp',
                         web_app: {
-                            url: 'https://aharon-petrosov.github.io/miniapp_wonda' // The URL where your miniapp is hosted
+                            url: 'https://aharon-petrosov.github.io/miniapp_wonda',
                         }
                     }
                 ]
-            ]
+            ],
+            resize_keyboard: true
         }
     });
+});
+
+bot.on('web_app_data', (msg) => {
+    const userId = msg.from.id;
+    const webAppData = msg.web_app_data.data;
+    console.log(`User ${userId} sent web app data: ${webAppData}`);
 });
